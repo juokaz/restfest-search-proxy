@@ -17,10 +17,10 @@ http.createServer(function(request, response) {
   if (pathname == '/') {
     request({uri: api + request.url}, function (error, response, body) {
       body = body.replace('</helpdesk>', '
-  <atom:link rel="http://helpdesk.hackday.2012.restfest.org/rels/search" href="http://.../search" type="application/vnd.org.restfest.2012.hackday+xml" />
-  <xhtml:form rel="http://helpdesk.hackday.2012.restfest.org/rels/search" action="http://.../search" type="application/vnd.org.restfest.2012.hackday+xml" method="get">
-    <xhtml:input type="text" name="title" />
-  </xhtml:form>
+  <link xmlns="http://www.w3.org/2005/Atom" rel="http://helpdesk.hackday.2012.restfest.org/rels/search" href="http://.../search" type="application/vnd.org.restfest.2012.hackday+xml" />
+  <form xmlns="http://www.w3.org/1999/xhtml" rel="http://helpdesk.hackday.2012.restfest.org/rels/search" action="http://.../search" type="application/vnd.org.restfest.2012.hackday+xml" method="get">
+    <input type="text" name="title" />
+  </form>
 </helpdesk>');
       response.write(body);
       response.end();
