@@ -11,13 +11,13 @@ var serverOptions = {
 var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
 http.createServer(function(request, response) {
-  var proxy = http.createClient(80, api);
+  var pathname = url.parse(request.url).pathname;
   var search = false;
 
   // search params
   var title = request.body.title;
 
-  if (title) {
+  if (pathname == '/tickets' && title) {
     // build query object
     var qryObj = {
         "query" : {
@@ -46,6 +46,7 @@ http.createServer(function(request, response) {
         })
         .exec();
   } else {
+    var proxy = http.createClient(80, api);
     var proxy_request = proxy.request(request.method, request.url, request.headers);
     proxy_request.addListener('response', function (proxy_response) {
       proxy_response.addListener('data', function(chunk) {
