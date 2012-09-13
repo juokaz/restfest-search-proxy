@@ -12,15 +12,31 @@ var elasticSearchClient = new ElasticSearchClient(serverOptions);
 
 http.createServer(function(request, response) {
   var proxy = http.createClient(80, api);
-  if (search) {
+  var search = false;
+
+  // search params
+  var title = request.body.title;
+
+  if (title) {
     // build query object
     var qryObj = {
-        field : term
-    }
+        "query" : {
+            "term" : { "title" : title }
+        }
+    };
     // query documents from elasticsearch
     elasticSearchClient.search(index_name, type_name, qryObj)
         .on('data', function(data) {
             var result = JSON.parse(data);
+
+            var items = [];
+            result.hits.hits.forEach(function(item) {
+              items[] = item._source.ticket_xml;
+            });
+
+            // build tickets xml from items array
+            response.write("Hello World");
+            response.end();
         })
         .on('done', function(){
             //always returns 0 right now
@@ -29,7 +45,6 @@ http.createServer(function(request, response) {
             console.log(error)
         })
         .exec();
-    // return actual tickets
   } else {
     var proxy_request = proxy.request(request.method, request.url, request.headers);
     proxy_request.addListener('response', function (proxy_response) {
